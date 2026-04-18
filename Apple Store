@@ -1,0 +1,59 @@
+# Smart Gym Camera + Machine System (Python + OpenCV)
+
+import cv2
+
+# Fake gym machine status (you can later connect sensors / IoT)
+machines = {
+    "Treadmill": "Active",
+    "Bench Press": "Available",
+    "Bike": "In Use",
+    "Row Machine": "Available"
+}
+
+# Start camera (0 = default webcam)
+cap = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    # Resize for dashboard feel
+    frame = cv2.resize(frame, (900, 600))
+
+    # Header
+    cv2.rectangle(frame, (0,0), (900,60), (0,0,0), -1)
+    cv2.putText(frame, "GYM AI - Live Monitoring System", (20,40),
+                cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
+
+    # Machine Panel Background
+    cv2.rectangle(frame, (650,80), (890,580), (30,30,30), -1)
+
+    cv2.putText(frame, "Machines", (670,120),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2)
+
+    y = 170
+    for name, status in machines.items():
+        color = (0,255,0) if status == "Available" else (0,0,255)
+
+        cv2.putText(frame, f"{name}: {status}",
+                    (670, y),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    color, 1)
+        y += 60
+
+    # Fake analytics
+    cv2.putText(frame, "Calories: 1240", (20,520),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
+
+    cv2.putText(frame, "Heart Rate: 132 BPM", (20,550),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
+
+    cv2.imshow("GYM AI Dashboard", frame)
+
+    # press Q to quit
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()

@@ -1,0 +1,73 @@
+// Smart Gym Camera + Machine Dashboard (Go with Fyne)
+
+package main
+
+import (
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
+)
+
+func main() {
+	a := app.New()
+	w := a.NewWindow("GYM AI Dashboard")
+	w.Resize(fyne.NewSize(1100, 650))
+
+	// Content Area
+	content := container.NewVBox()
+
+	// Camera Page
+	showCamera := func() {
+		content.Objects = []fyne.CanvasObject{
+			widget.NewLabel("📷 Live Camera Feed"),
+			widget.NewSeparator(),
+			widget.NewLabel("Camera Stream Running..."),
+		}
+		content.Refresh()
+	}
+
+	// Machines Page
+	showMachines := func() {
+		content.Objects = []fyne.CanvasObject{
+			widget.NewLabel("🏃 Treadmill : Active"),
+			widget.NewLabel("🏋 Bench Press : Available"),
+			widget.NewLabel("🚴 Bike : In Use"),
+			widget.NewLabel("🔥 Calories Burned Today : 1240"),
+		}
+		content.Refresh()
+	}
+
+	// Sidebar Buttons
+	cameraBtn := widget.NewButton("Live Camera", showCamera)
+	machineBtn := widget.NewButton("Machines", showMachines)
+	exitBtn := widget.NewButton("Exit", func() {
+		w.Close()
+	})
+
+	sidebar := container.NewVBox(
+		widget.NewLabel("GYM AI"),
+		cameraBtn,
+		machineBtn,
+		exitBtn,
+	)
+
+	// Topbar
+	topbar := widget.NewLabel("Smart Gym Monitoring System")
+
+	// Layout
+	layout := container.NewBorder(
+		topbar,
+		nil,
+		sidebar,
+		nil,
+		content,
+	)
+
+	w.SetContent(layout)
+
+	// Default Page
+	showCamera()
+
+	w.ShowAndRun()
+}

@@ -1,0 +1,142 @@
+' Smart Gym Camera + Machine Dashboard (.NET VB Windows Forms)
+
+Imports System.Drawing
+Imports System.Windows.Forms
+
+Public Class GymDashboard
+    Inherits Form
+
+    Private sidebar As Panel
+    Private topbar As Panel
+    Private content As Panel
+
+    Private btnCamera As Button
+    Private btnMachines As Button
+    Private btnExit As Button
+
+    Public Sub New()
+
+        Me.Text = "GYM AI Dashboard"
+        Me.Size = New Size(1100, 650)
+        Me.StartPosition = FormStartPosition.CenterScreen
+        Me.BackColor = Color.Black
+
+        ' Sidebar
+        sidebar = New Panel()
+        sidebar.Dock = DockStyle.Left
+        sidebar.Width = 220
+        sidebar.BackColor = Color.FromArgb(26, 26, 26)
+        Me.Controls.Add(sidebar)
+
+        Dim title As New Label()
+        title.Text = "GYM AI"
+        title.ForeColor = Color.Lime
+        title.Font = New Font("Arial", 22, FontStyle.Bold)
+        title.Dock = DockStyle.Top
+        title.Height = 80
+        title.TextAlign = ContentAlignment.MiddleCenter
+        sidebar.Controls.Add(title)
+
+        btnCamera = CreateButton("Live Camera", 100)
+        btnMachines = CreateButton("Machines", 160)
+        btnExit = CreateButton("Exit", 220)
+
+        btnExit.BackColor = Color.Red
+
+        AddHandler btnCamera.Click, AddressOf ShowCamera
+        AddHandler btnMachines.Click, AddressOf ShowMachines
+        AddHandler btnExit.Click, Sub() Me.Close()
+
+        sidebar.Controls.Add(btnCamera)
+        sidebar.Controls.Add(btnMachines)
+        sidebar.Controls.Add(btnExit)
+
+        ' Topbar
+        topbar = New Panel()
+        topbar.Dock = DockStyle.Top
+        topbar.Height = 60
+        topbar.BackColor = Color.FromArgb(17, 17, 17)
+        Me.Controls.Add(topbar)
+
+        Dim header As New Label()
+        header.Text = "Smart Gym Monitoring System"
+        header.ForeColor = Color.White
+        header.Font = New Font("Arial", 18, FontStyle.Bold)
+        header.Dock = DockStyle.Fill
+        header.TextAlign = ContentAlignment.MiddleCenter
+        topbar.Controls.Add(header)
+
+        ' Content
+        content = New Panel()
+        content.Dock = DockStyle.Fill
+        content.BackColor = Color.Black
+        Me.Controls.Add(content)
+
+        ShowCamera(Nothing, Nothing)
+
+    End Sub
+
+    Private Function CreateButton(txt As String, y As Integer) As Button
+        Dim btn As New Button()
+        btn.Text = txt
+        btn.Size = New Size(180, 45)
+        btn.Location = New Point(20, y)
+        btn.BackColor = Color.FromArgb(34, 34, 34)
+        btn.ForeColor = Color.White
+        btn.FlatStyle = FlatStyle.Flat
+        btn.Font = New Font("Arial", 12, FontStyle.Bold)
+        Return btn
+    End Function
+
+    Private Sub ClearContent()
+        content.Controls.Clear()
+    End Sub
+
+    Private Sub ShowCamera(sender As Object, e As EventArgs)
+        ClearContent()
+
+        Dim cam As New Label()
+        cam.Text = "📷 Camera Feed"
+        cam.ForeColor = Color.Gray
+        cam.BackColor = Color.Black
+        cam.Font = New Font("Arial", 28, FontStyle.Bold)
+        cam.Dock = DockStyle.Fill
+        cam.TextAlign = ContentAlignment.MiddleCenter
+
+        content.Controls.Add(cam)
+    End Sub
+
+    Private Sub ShowMachines(sender As Object, e As EventArgs)
+        ClearContent()
+
+        Dim data() As String = {
+            "🏃 Treadmill : Active",
+            "🏋 Bench Press : Available",
+            "🚴 Bike : In Use",
+            "🔥 Calories Burned Today : 1240"
+        }
+
+        Dim y As Integer = 50
+
+        For Each item As String In data
+            Dim lbl As New Label()
+            lbl.Text = item
+            lbl.ForeColor = Color.White
+            lbl.BackColor = Color.FromArgb(34, 34, 34)
+            lbl.Font = New Font("Arial", 16, FontStyle.Regular)
+            lbl.Size = New Size(500, 50)
+            lbl.Location = New Point(50, y)
+            lbl.TextAlign = ContentAlignment.MiddleLeft
+
+            content.Controls.Add(lbl)
+            y += 70
+        Next
+    End Sub
+
+    <STAThread>
+    Public Shared Sub Main()
+        Application.EnableVisualStyles()
+        Application.Run(New GymDashboard())
+    End Sub
+
+End Class

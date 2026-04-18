@@ -1,0 +1,111 @@
+# Smart Gym Camera + Machine Dashboard (.NET PowerShell Windows Forms)
+
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+# Window
+$form = New-Object System.Windows.Forms.Form
+$form.Text = "GYM AI Dashboard"
+$form.Size = New-Object System.Drawing.Size(1100,650)
+$form.StartPosition = "CenterScreen"
+$form.BackColor = [System.Drawing.Color]::Black
+
+# Sidebar
+$sidebar = New-Object System.Windows.Forms.Panel
+$sidebar.Size = New-Object System.Drawing.Size(220,650)
+$sidebar.Dock = "Left"
+$sidebar.BackColor = [System.Drawing.Color]::FromArgb(26,26,26)
+$form.Controls.Add($sidebar)
+
+# Title
+$title = New-Object System.Windows.Forms.Label
+$title.Text = "GYM AI"
+$title.ForeColor = [System.Drawing.Color]::Lime
+$title.Font = New-Object System.Drawing.Font("Arial",22,[System.Drawing.FontStyle]::Bold)
+$title.Size = New-Object System.Drawing.Size(220,80)
+$title.TextAlign = "MiddleCenter"
+$sidebar.Controls.Add($title)
+
+# Topbar
+$topbar = New-Object System.Windows.Forms.Panel
+$topbar.Dock = "Top"
+$topbar.Height = 60
+$topbar.BackColor = [System.Drawing.Color]::FromArgb(17,17,17)
+$form.Controls.Add($topbar)
+
+$header = New-Object System.Windows.Forms.Label
+$header.Text = "Smart Gym Monitoring System"
+$header.ForeColor = [System.Drawing.Color]::White
+$header.Font = New-Object System.Drawing.Font("Arial",18,[System.Drawing.FontStyle]::Bold)
+$header.Dock = "Fill"
+$header.TextAlign = "MiddleCenter"
+$topbar.Controls.Add($header)
+
+# Content
+$content = New-Object System.Windows.Forms.Panel
+$content.Dock = "Fill"
+$content.BackColor = [System.Drawing.Color]::Black
+$form.Controls.Add($content)
+
+function Clear-ContentArea {
+    $content.Controls.Clear()
+}
+
+function Show-Camera {
+    Clear-ContentArea
+
+    $cam = New-Object System.Windows.Forms.Label
+    $cam.Text = "📷 Camera Feed"
+    $cam.ForeColor = [System.Drawing.Color]::Gray
+    $cam.Font = New-Object System.Drawing.Font("Arial",28,[System.Drawing.FontStyle]::Bold)
+    $cam.Dock = "Fill"
+    $cam.TextAlign = "MiddleCenter"
+
+    $content.Controls.Add($cam)
+}
+
+function Show-Machines {
+    Clear-ContentArea
+
+    $items = @(
+        "🏃 Treadmill : Active",
+        "🏋 Bench Press : Available",
+        "🚴 Bike : In Use",
+        "🔥 Calories Burned Today : 1240"
+    )
+
+    $y = 40
+    foreach($item in $items){
+        $lbl = New-Object System.Windows.Forms.Label
+        $lbl.Text = $item
+        $lbl.ForeColor = [System.Drawing.Color]::White
+        $lbl.BackColor = [System.Drawing.Color]::FromArgb(34,34,34)
+        $lbl.Font = New-Object System.Drawing.Font("Arial",16)
+        $lbl.Size = New-Object System.Drawing.Size(500,50)
+        $lbl.Location = New-Object System.Drawing.Point(40,$y)
+        $lbl.TextAlign = "MiddleLeft"
+
+        $content.Controls.Add($lbl)
+        $y += 65
+    }
+}
+
+function New-MenuButton($text,$x,$y,$action){
+    $btn = New-Object System.Windows.Forms.Button
+    $btn.Text = $text
+    $btn.Size = New-Object System.Drawing.Size(180,45)
+    $btn.Location = New-Object System.Drawing.Point($x,$y)
+    $btn.BackColor = [System.Drawing.Color]::FromArgb(34,34,34)
+    $btn.ForeColor = [System.Drawing.Color]::White
+    $btn.FlatStyle = "Flat"
+    $btn.Add_Click($action)
+    $sidebar.Controls.Add($btn)
+}
+
+New-MenuButton "Live Camera" 20 100 { Show-Camera }
+New-MenuButton "Machines" 20 160 { Show-Machines }
+New-MenuButton "Exit" 20 220 { $form.Close() }
+
+Show-Camera
+
+[void]$form.ShowDialog()

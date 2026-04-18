@@ -1,0 +1,121 @@
+// Smart Gym Camera + Machine Dashboard (.NET F# WPF)
+
+open System
+open System.Windows
+open System.Windows.Controls
+open System.Windows.Media
+
+[<STAThread>]
+do
+    let app = Application()
+
+    let window = Window()
+    window.Title <- "GYM AI Dashboard"
+    window.Width <- 1100.0
+    window.Height <- 650.0
+    window.Background <- SolidColorBrush(Color.FromRgb(15uy,15uy,15uy))
+
+    // Root Grid
+    let root = Grid()
+    window.Content <- root
+
+    root.ColumnDefinitions.Add(ColumnDefinition(Width = GridLength(220.0)))
+    root.ColumnDefinitions.Add(ColumnDefinition())
+
+    root.RowDefinitions.Add(RowDefinition(Height = GridLength(60.0)))
+    root.RowDefinitions.Add(RowDefinition())
+
+    // Sidebar
+    let sidebar = StackPanel()
+    sidebar.Background <- SolidColorBrush(Color.FromRgb(26uy,26uy,26uy))
+    Grid.SetColumn(sidebar, 0)
+    Grid.SetRowSpan(sidebar, 2)
+    root.Children.Add(sidebar) |> ignore
+
+    let title = TextBlock()
+    title.Text <- "GYM AI"
+    title.Foreground <- Brushes.Lime
+    title.FontSize <- 24.0
+    title.FontWeight <- FontWeights.Bold
+    title.Margin <- Thickness(20.0)
+    sidebar.Children.Add(title) |> ignore
+
+    let content = StackPanel()
+    content.Background <- Brushes.Black
+    Grid.SetColumn(content, 1)
+    Grid.SetRow(content, 1)
+    root.Children.Add(content) |> ignore
+
+    // Topbar
+    let topbar = Border()
+    topbar.Background <- SolidColorBrush(Color.FromRgb(17uy,17uy,17uy))
+    Grid.SetColumn(topbar, 1)
+    Grid.SetRow(topbar, 0)
+    root.Children.Add(topbar) |> ignore
+
+    let header = TextBlock()
+    header.Text <- "Smart Gym Monitoring System"
+    header.Foreground <- Brushes.White
+    header.FontSize <- 22.0
+    header.FontWeight <- FontWeights.Bold
+    header.VerticalAlignment <- VerticalAlignment.Center
+    header.HorizontalAlignment <- HorizontalAlignment.Center
+    topbar.Child <- header
+
+    let clearContent() =
+        content.Children.Clear()
+
+    let showCamera() =
+        clearContent()
+
+        let cam = TextBlock()
+        cam.Text <- "📷 Camera Feed"
+        cam.Foreground <- Brushes.Gray
+        cam.FontSize <- 34.0
+        cam.Margin <- Thickness(40.0)
+        cam.HorizontalAlignment <- HorizontalAlignment.Center
+        cam.VerticalAlignment <- VerticalAlignment.Center
+
+        content.Children.Add(cam) |> ignore
+
+    let showMachines() =
+        clearContent()
+
+        let data = [
+            "🏃 Treadmill : Active"
+            "🏋 Bench Press : Available"
+            "🚴 Bike : In Use"
+            "🔥 Calories Burned Today : 1240"
+        ]
+
+        for item in data do
+            let box = Border()
+            box.Background <- SolidColorBrush(Color.FromRgb(34uy,34uy,34uy))
+            box.Margin <- Thickness(20.0)
+            box.Padding <- Thickness(15.0)
+
+            let txt = TextBlock()
+            txt.Text <- item
+            txt.Foreground <- Brushes.White
+            txt.FontSize <- 18.0
+
+            box.Child <- txt
+            content.Children.Add(box) |> ignore
+
+    let makeButton text action =
+        let btn = Button()
+        btn.Content <- text
+        btn.Margin <- Thickness(15.0,5.0,15.0,5.0)
+        btn.Height <- 45.0
+        btn.Background <- SolidColorBrush(Color.FromRgb(34uy,34uy,34uy))
+        btn.Foreground <- Brushes.White
+        btn.Click.Add(fun _ -> action())
+        btn
+
+    sidebar.Children.Add(makeButton "Live Camera" showCamera) |> ignore
+    sidebar.Children.Add(makeButton "Machines" showMachines) |> ignore
+    sidebar.Children.Add(makeButton "Exit" (fun () -> window.Close())) |> ignore
+
+    showCamera()
+
+    app.Run(window) |> ignore

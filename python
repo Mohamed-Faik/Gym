@@ -1,0 +1,102 @@
+# Smart Gym Camera + Machine Dashboard (Python Tkinter)
+
+import tkinter as tk
+from tkinter import ttk
+
+# Main Window
+root = tk.Tk()
+root.title("GYM AI Dashboard")
+root.geometry("1100x650")
+root.configure(bg="#0f0f0f")
+
+# Sidebar
+sidebar = tk.Frame(root, bg="#1a1a1a", width=220)
+sidebar.pack(side="left", fill="y")
+
+title = tk.Label(sidebar, text="GYM AI", fg="#00ff99", bg="#1a1a1a",
+                 font=("Arial", 22, "bold"))
+title.pack(pady=20)
+
+# Main Area
+main = tk.Frame(root, bg="#0f0f0f")
+main.pack(side="right", fill="both", expand=True)
+
+topbar = tk.Label(main, text="Smart Gym Monitoring System",
+                  fg="white", bg="#111111",
+                  font=("Arial", 24, "bold"), pady=15)
+topbar.pack(fill="x")
+
+content = tk.Frame(main, bg="#0f0f0f")
+content.pack(fill="both", expand=True, padx=20, pady=20)
+
+# Functions
+def clear_content():
+    for widget in content.winfo_children():
+        widget.destroy()
+
+def show_camera():
+    clear_content()
+
+    card = tk.Frame(content, bg="#1a1a1a", bd=0)
+    card.pack(fill="both", expand=True)
+
+    label = tk.Label(card, text="Live Camera Feed", fg="white",
+                     bg="#1a1a1a", font=("Arial", 20, "bold"))
+    label.pack(pady=15)
+
+    camera_box = tk.Label(card, text="📷 Camera Stream",
+                          fg="#666666", bg="black",
+                          font=("Arial", 24),
+                          width=40, height=12)
+    camera_box.pack(pady=20)
+
+def show_machines():
+    clear_content()
+
+    card = tk.Frame(content, bg="#1a1a1a")
+    card.pack(fill="both", expand=True)
+
+    label = tk.Label(card, text="Machine Status", fg="white",
+                     bg="#1a1a1a", font=("Arial", 20, "bold"))
+    label.pack(pady=15)
+
+    machines = [
+        "🏃 Treadmill : Active",
+        "🏋️ Bench Press : Available",
+        "🚴 Bike : In Use",
+        "🔥 Calories Burned Today : 1240"
+    ]
+
+    for machine in machines:
+        item = tk.Label(card, text=machine,
+                        fg="white", bg="#222222",
+                        font=("Arial", 16),
+                        padx=15, pady=12)
+        item.pack(fill="x", padx=30, pady=8)
+
+# Sidebar Buttons
+btn1 = tk.Button(sidebar, text="Live Camera",
+                 bg="#222222", fg="white",
+                 font=("Arial", 14),
+                 relief="flat",
+                 command=show_camera)
+btn1.pack(fill="x", padx=15, pady=10)
+
+btn2 = tk.Button(sidebar, text="Machines",
+                 bg="#222222", fg="white",
+                 font=("Arial", 14),
+                 relief="flat",
+                 command=show_machines)
+btn2.pack(fill="x", padx=15, pady=10)
+
+btn3 = tk.Button(sidebar, text="Exit",
+                 bg="#ff3333", fg="white",
+                 font=("Arial", 14),
+                 relief="flat",
+                 command=root.quit)
+btn3.pack(fill="x", padx=15, pady=30)
+
+# Default Page
+show_camera()
+
+root.mainloop()

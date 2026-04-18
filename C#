@@ -1,0 +1,144 @@
+// Smart Gym Camera + Machine Dashboard (C# Windows Forms)
+
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+public class GymDashboard : Form
+{
+    Panel sidebar, topbar, content;
+    Button btnCamera, btnMachines, btnExit;
+    Label title, header;
+
+    public GymDashboard()
+    {
+        // Window
+        this.Text = "GYM AI Dashboard";
+        this.Size = new Size(1100, 650);
+        this.BackColor = Color.Black;
+        this.StartPosition = FormStartPosition.CenterScreen;
+
+        // Sidebar
+        sidebar = new Panel();
+        sidebar.Size = new Size(220, 650);
+        sidebar.BackColor = Color.FromArgb(26, 26, 26);
+        sidebar.Dock = DockStyle.Left;
+        this.Controls.Add(sidebar);
+
+        title = new Label();
+        title.Text = "GYM AI";
+        title.ForeColor = Color.Lime;
+        title.Font = new Font("Arial", 22, FontStyle.Bold);
+        title.AutoSize = false;
+        title.TextAlign = ContentAlignment.MiddleCenter;
+        title.Dock = DockStyle.Top;
+        title.Height = 80;
+        sidebar.Controls.Add(title);
+
+        btnCamera = CreateButton("Live Camera", 100);
+        btnMachines = CreateButton("Machines", 160);
+        btnExit = CreateButton("Exit", 220);
+        btnExit.BackColor = Color.Red;
+
+        btnCamera.Click += (s, e) => ShowCamera();
+        btnMachines.Click += (s, e) => ShowMachines();
+        btnExit.Click += (s, e) => this.Close();
+
+        sidebar.Controls.Add(btnCamera);
+        sidebar.Controls.Add(btnMachines);
+        sidebar.Controls.Add(btnExit);
+
+        // Topbar
+        topbar = new Panel();
+        topbar.Height = 60;
+        topbar.Dock = DockStyle.Top;
+        topbar.BackColor = Color.FromArgb(17, 17, 17);
+        this.Controls.Add(topbar);
+
+        header = new Label();
+        header.Text = "Smart Gym Monitoring System";
+        header.ForeColor = Color.White;
+        header.Font = new Font("Arial", 20, FontStyle.Bold);
+        header.Dock = DockStyle.Fill;
+        header.TextAlign = ContentAlignment.MiddleCenter;
+        topbar.Controls.Add(header);
+
+        // Content
+        content = new Panel();
+        content.Dock = DockStyle.Fill;
+        content.BackColor = Color.Black;
+        this.Controls.Add(content);
+
+        ShowCamera();
+    }
+
+    Button CreateButton(string text, int y)
+    {
+        Button btn = new Button();
+        btn.Text = text;
+        btn.Size = new Size(180, 45);
+        btn.Location = new Point(20, y);
+        btn.BackColor = Color.FromArgb(34, 34, 34);
+        btn.ForeColor = Color.White;
+        btn.FlatStyle = FlatStyle.Flat;
+        btn.Font = new Font("Arial", 12, FontStyle.Bold);
+        return btn;
+    }
+
+    void ClearContent()
+    {
+        content.Controls.Clear();
+    }
+
+    void ShowCamera()
+    {
+        ClearContent();
+
+        Label cam = new Label();
+        cam.Text = "📷 Camera Feed";
+        cam.ForeColor = Color.Gray;
+        cam.BackColor = Color.Black;
+        cam.Font = new Font("Arial", 28, FontStyle.Bold);
+        cam.Dock = DockStyle.Fill;
+        cam.TextAlign = ContentAlignment.MiddleCenter;
+
+        content.Controls.Add(cam);
+    }
+
+    void ShowMachines()
+    {
+        ClearContent();
+
+        string[] data =
+        {
+            "🏃 Treadmill : Active",
+            "🏋 Bench Press : Available",
+            "🚴 Bike : In Use",
+            "🔥 Calories Burned Today : 1240"
+        };
+
+        int y = 50;
+
+        foreach (string item in data)
+        {
+            Label lbl = new Label();
+            lbl.Text = item;
+            lbl.ForeColor = Color.White;
+            lbl.BackColor = Color.FromArgb(34, 34, 34);
+            lbl.Font = new Font("Arial", 16, FontStyle.Regular);
+            lbl.Size = new Size(500, 50);
+            lbl.Location = new Point(50, y);
+            lbl.TextAlign = ContentAlignment.MiddleLeft;
+
+            content.Controls.Add(lbl);
+            y += 70;
+        }
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.EnableVisualStyles();
+        Application.Run(new GymDashboard());
+    }
+}
